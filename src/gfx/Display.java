@@ -10,14 +10,12 @@ import java.awt.geom.Point2D;
  * Created by tomas on 14/07/2017.
  */
 public class Display extends JPanel {
-    private RayCaster rayCaster1, rayCaster2;
+    private RayCaster rayCaster1;
 
     public void init(){
-        new geom.Shape(Color.BLACK, new Point2D.Float(0, 0), new Point2D.Float(getWidth(), 0), new Point2D.Float(getWidth(), getHeight()), new Point2D.Float(0, getHeight()));
-        new geom.Shape(Color.BLACK, new Point2D.Float(200, 200), new Point2D.Float(400, 200), new Point2D.Float(400, 500), new Point2D.Float(200, 500));
-        new geom.Shape(Color.BLACK, new Point2D.Float(400, 100), new Point2D.Float(300, 200));
+        new geom.Shape(Color.BLACK, new Point2D.Double(0, 0), new Point2D.Double(getWidth(), 0), new Point2D.Double(getWidth(), getHeight()), new Point2D.Double(0, getHeight()));
+        new geom.Shape(Color.BLACK, new Point2D.Double(200, 200), new Point2D.Double(400, 200), new Point2D.Double(400, 500), new Point2D.Double(200, 500));
         rayCaster1 = new RayCaster(300, 300);
-        rayCaster2 = new RayCaster(600, 500);
     }
 
     @Override
@@ -27,12 +25,10 @@ public class Display extends JPanel {
         g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
         drawBackground(g);
-        geom.Shape.renderInstances(g);
-        rayCaster1.renderComposite(g, Color.YELLOW, getWidth(), getHeight());
-        rayCaster2.renderComposite(g, Color.CYAN.brighter(), getWidth(), getHeight());
+        geom.Shape.renderInstances(g2d);
+        rayCaster1.renderComposite(g2d, Color.YELLOW, getWidth(), getHeight());
         g.setColor(Color.RED);
         g.fillOval(rayCaster1.getX() - 3, rayCaster1.getY() - 3, 5, 5);
-        g.fillOval(rayCaster2.getX() - 3, rayCaster2.getY() - 3, 5, 5);
     }
 
     public void update(){

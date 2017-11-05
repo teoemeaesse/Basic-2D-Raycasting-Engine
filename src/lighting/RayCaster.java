@@ -25,16 +25,15 @@ public class RayCaster {
         this.y = y;
     }
 
-    public void renderComposite(Graphics g, Color c, int width, int height){
-        Area visible = getVisibleArea(Shape.getInstances()),
+    public void renderComposite(Graphics2D g2d, Color c, int width, int height){
+        Area visible = getVisibleArea(Shape.getInstances(), g2d),
             total = new Area(new Polygon(new int[]{0, width, width, 0}, new int[]{0, 0, height, height}, 4));
         total.subtract(visible);
-        Graphics2D g2d = (Graphics2D) g;
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
         g2d.setColor(c);
         g2d.fill(total);
     }
-    public Area getVisibleArea(ArrayList<Shape> map){
+    public Area getVisibleArea(ArrayList<Shape> map, Graphics2D g2d){
         ArrayList<Ray> rays = new ArrayList<>();
         ArrayList<Point2D> vertices = new ArrayList<>(),
                             visibilityPoints = new ArrayList<>();
@@ -46,12 +45,30 @@ public class RayCaster {
             segments.addAll(s.getLines());
         }
 
+        //remove duplicate vertices
+        ArrayList<Point2D> correctedVertices = new ArrayList<>();
+        for(Point2D v : vertices){
+            if(correctedVertices.size() == 0)
+                correctedVertices.add(v);
+            else{
+                boolean contained = false;
+                for(Point2D c : correctedVertices)
+                    if(c.getX() == v.getX() && c.getY() == v.getY())
+                        contained = true;
+                if(!contained)
+                    correctedVertices.add(v);
+            }
+        }
+        vertices = correctedVertices;
+
         //cast the rays and populate visibilityPoints
         for(Point2D v : vertices){
             Ray[] raysToCheck = new Ray[]{
                     new Ray(x, y, (int) v.getX(), (int) v.getY()),
                     new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(-1).increaseLength(1000),
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(1).increaseLength(1000)
+                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(1).increaseLength(1000),
+                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(-5).increaseLength(1000),
+                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(5).increaseLength(1000)
             };
             ArrayList<Point2D> rayIntersects = new ArrayList<>();
             Point2D closestIntersect;
@@ -73,6 +90,7 @@ public class RayCaster {
                 }
 
                 rayIntersects = new ArrayList<>();
+
             }
         }
 
