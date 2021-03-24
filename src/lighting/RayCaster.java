@@ -26,17 +26,16 @@ public class RayCaster {
     }
 
     public void renderComposite(Graphics2D g2d, Color c, int width, int height){
-        Area visible = getVisibleArea(Shape.getInstances(), g2d),
-            total = new Area(new Polygon(new int[]{0, width, width, 0}, new int[]{0, 0, height, height}, 4));
+        Area visible = getVisibleArea(Shape.getInstances()),
+             total = new Area(new Polygon(new int[]{0, width, width, 0}, new int[]{0, 0, height, height}, 4));
         total.subtract(visible);
         g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, .5f));
         g2d.setColor(c);
         g2d.fill(total);
     }
-    public Area getVisibleArea(ArrayList<Shape> map, Graphics2D g2d){
-        ArrayList<Ray> rays = new ArrayList<>();
+    public Area getVisibleArea(ArrayList<Shape> map){
         ArrayList<Point2D> vertices = new ArrayList<>(),
-                            visibilityPoints = new ArrayList<>();
+                           visibilityPoints = new ArrayList<>();
         ArrayList<Line2D> segments = new ArrayList<>();
 
         //populate vertices and segments
@@ -64,11 +63,8 @@ public class RayCaster {
         //cast the rays and populate visibilityPoints
         for(Point2D v : vertices){
             Ray[] raysToCheck = new Ray[]{
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()),
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(-1).increaseLength(1000),
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(1).increaseLength(1000),
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(-5).increaseLength(1000),
-                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(5).increaseLength(1000)
+                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(-0.3).increaseLength(10000),
+                    new Ray(x, y, (int) v.getX(), (int) v.getY()).rotate(0.3).increaseLength(10000),
             };
             ArrayList<Point2D> rayIntersects = new ArrayList<>();
             Point2D closestIntersect;
@@ -85,7 +81,6 @@ public class RayCaster {
                 }
 
                 if(closestIntersect != null){
-                    rays.add(new Ray(x, y, (int) closestIntersect.getX(), (int) closestIntersect.getY()));
                     visibilityPoints.add(closestIntersect);
                 }
 

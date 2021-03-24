@@ -35,7 +35,7 @@ public class Utils {
 
             ix = rx1 + rdx * t1;
             iy = ry1 + rdy * t1;
-            return new Point2D.Float((int) ix, (int) iy);
+            return new Point2D.Double((int) ix, (int) iy);
     }else
             return null;
     }

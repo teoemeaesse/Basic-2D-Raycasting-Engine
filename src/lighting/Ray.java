@@ -24,13 +24,15 @@ public class Ray implements Cloneable {
         line = new Line2D.Double((int) line.getX1(), (int) line.getY1(), (int) (line.getX1() + ndx), (int) (line.getY1() + ndy));
         return this;
     }
+
     public Ray rotate(double angle){
         return new Ray(new Line2D.Double(
-                (int) line.getX1(),
-                (int) line.getY1(),
-                (int) (line.getX1() + Utils.getLineLength(line) * Math.cos(Math.toRadians(angle + getAngle()))),
-                (int) (line.getY1() + Utils.getLineLength(line) * Math.sin(Math.toRadians(angle + getAngle())))));
+                line.getX1(),
+                line.getY1(),
+                line.getX1() + Utils.getLineLength(line) * Math.cos(Math.toRadians(angle + getAngle())),
+                line.getY1() + Utils.getLineLength(line) * Math.sin(Math.toRadians(angle + getAngle()))));
     }
+
     public double getAngle(){
         double xd = line.getX2() - line.getX1(),
                 yd = line.getY2() - line.getY1();
